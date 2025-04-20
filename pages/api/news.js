@@ -1,12 +1,17 @@
 import axios from 'axios';
 
 export default async function handler(req, res) {
-  const url = `https://newsapi.org/v2/everything?q=filmes%20OR%20séries&language=pt&sortBy=publishedAt&pageSize=20&apiKey=${process.env.NEWS_API_KEY}`;
-  
   try {
-    const response = await axios.get(url);
-    res.status(200).json(response.data.articles);
+    const response = await axios.get('https://newsapi.org/v2/top-headlines', {
+      params: {
+        apiKey: process.env.NEWS_API_KEY,
+        country: 'br',
+        category: 'entertainment' // Aqui você pode ajustar a categoria
+      }
+    });
+    
+    res.status(200).json(response.data);
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar notícias' });
+    res.status(500).json({ error: 'Falha ao carregar as notícias.' });
   }
 }
