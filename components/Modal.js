@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Modal = ({ isOpen, onClose, article }) => {
-  if (!isOpen || !article) return null; // Não mostra o modal se ele não estiver aberto ou se não houver uma notícia selecionada
+  if (!isOpen || !article) return null;
 
   return (
     <div className="custom-modal" onClick={onClose}>
