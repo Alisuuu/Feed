@@ -21,7 +21,9 @@ export default async function handler(request, response) {
       const unwanted = [
         'economia', 'futebol', 'esporte', 'finanças', 'negócios', 'política',
         'mercado', 'ações', 'tecnologia', 'inteligência artificial', 'ia',
-        'monitor', 'celular', 'notebook', 'smartphone', 'dispositivo', 'hardware'
+        'monitor', 'celular', 'notebook', 'smartphone', 'dispositivo', 'hardware',
+        'música', 'cantor', 'banda', 'álbum', 'lançamento musical',
+        'curitiba', 'cidade', 'turismo', 'viagem', 'gastronomia', 'evento local'
       ];
 
       const filteredArticles = data.articles.filter(article => {
