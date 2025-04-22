@@ -16,7 +16,7 @@ header {
     position: sticky; /* Fixa o cabeçalho no topo ao rolar */
     top: 0;
     z-index: 10; /* Garante que o cabeçalho fique acima do conteúdo */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Sombra sutil */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.0); /* Sombra sutil */
 }
 
 h1 {
@@ -37,7 +37,7 @@ main {
     border-radius: 10px; /* Bordas arredondadas */
     margin-bottom: 25px; /* Espaço maior entre os itens */
     overflow: hidden; /* Garante que a imagem de fundo e overlay respeitem as bordas arredondadas */
-    min-height: 200px; /* Altura mínima para os itens */
+    min-height: 250px; /* Altura mínima para os itens */
     display: flex; /* Usar flexbox para controlar o conteúdo (imagem de fundo + texto) */
     flex-direction: column; /* Empilha a imagem de fundo e o conteúdo de texto */
     justify-content: flex-end; /* Alinha o conteúdo de texto ao final (inferior) */
