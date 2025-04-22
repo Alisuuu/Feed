@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "node-fetch": "^2.6.7",
-    "cheerio": "^1.0.0-rc.12"
+    "cheerio": "^1.0.0-rc.12",
+    "gollum": "github:nocinema/gollum"
   }
 }
