@@ -7,21 +7,14 @@ export default async function handler(request, response) {
     return response.status(500).json({ error: 'NEWS_API_KEY não configurada.' });
   }
 
-  // Parâmetros da API NewsAPI para notícias de cinema, filmes e séries em português
-  // Usando a Opção 1 para a query mais específica
-  const query = '"notícias de cinema" OR "notícias de filmes" OR "notícias de séries" OR "estreia de filme" OR "nova série" OR "crítica de filme" OR "crítica de série" OR "trailer de filme" OR "trailer de série" OR "indústria cinematográfica"';
+  // Refinar busca para focar só em cinema/séries e excluir temas indesejados
+  const query = `("cinema" OR "filmes" OR "séries" OR "crítica de filme" OR "estreia de filme" OR "trailer de filme" OR "trailer de série")
+  -futebol -esporte -política -economia -mercado -finanças -negócios -ações`;
 
-  const language = 'pt'; // Idioma
-  const sortBy = 'publishedAt'; // Ordenar por data de publicação
+  const language = 'pt';
+  const sortBy = 'publishedAt';
 
-  // Se quiser focar apenas em notícias do Brasil, descomente a linha abaixo:
-  // const country = 'br';
-  // const newsUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}${country ? '&country='+country : ''}&sortBy=${sortBy}&apiKey=${apiKey}`;
-
-
-  // URL sem filtro por país para resultados mais abrangentes sobre cinema/séries
   const newsUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=${sortBy}&apiKey=${apiKey}`;
-
 
   try {
     const apiResponse = await fetch(newsUrl);
