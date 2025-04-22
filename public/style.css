@@ -37,7 +37,7 @@ main {
     border-radius: 10px; /* Bordas arredondadas */
     margin-bottom: 25px; /* Espaço maior entre os itens */
     overflow: hidden; /* Garante que a imagem de fundo e overlay respeitem as bordas arredondadas */
-    min-height: 400px; /* Altura mínima para os itens */
+    height: 400px; /* Altura mínima para os itens */
     display: flex; /* Usar flexbox para controlar o conteúdo (imagem de fundo + texto) */
     flex-direction: column; /* Empilha a imagem de fundo e o conteúdo de texto */
     justify-content: flex-end; /* Alinha o conteúdo de texto ao final (inferior) */
