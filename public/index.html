@@ -1,78 +1,76 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Feed de Notícias</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(145deg, #0d0d0d, #1a001a);
-      color: #fff;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    .container {
-      background: rgba(20, 0, 30, 0.6);
-      backdrop-filter: blur(12px);
-      padding: 3rem;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 0 20px rgba(200, 0, 255, 0.3);
-      max-width: 90%;
-      animation: fadeIn 1s ease;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      color: violet;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      color: #ccc;
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-    }
-
-    a {
-      text-decoration: none;
-      color: #000;
-      background: violet;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-weight: bold;
-      transition: 0.3s ease;
-      box-shadow: 0 0 10px violet;
-    }
-
-    a:hover {
-      background: #fff;
-      color: violet;
-      box-shadow: 0 0 20px violet;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notícias de Cinema</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Feed de Notícias</h1>
-    <p>Veja as últimas novidades sobre filmes e séries no seu portal lilás.</p>
-    <a href="/">Acessar o Feed</a>
-  </div>
+    <header>
+        <h1>Notícias de Cinema</h1>
+    </header>
+    <main id="news-container">
+        <p>Carregando notícias...</p>
+    </main>
+
+    <script>
+        async function fetchNews() {
+            const newsContainer = document.getElementById('news-container');
+            newsContainer.innerHTML = '<p>Carregando notícias...</p>'; // Limpa e mostra carregando
+
+            try {
+                // Chama a função serverless
+                const response = await fetch('/api/news');
+                const data = await response.json();
+
+                if (data.articles && data.articles.length > 0) {
+                    newsContainer.innerHTML = ''; // Limpa a mensagem de carregamento
+                    data.articles.forEach(article => {
+                        const articleElement = document.createElement('article');
+                        articleElement.classList.add('news-item');
+
+                        // Adiciona a imagem se existir
+                        if (article.urlToImage) {
+                            const img = document.createElement('img');
+                            img.src = article.urlToImage;
+                            img.alt = article.title;
+                            articleElement.appendChild(img);
+                        }
+
+                        const contentDiv = document.createElement('div');
+                        contentDiv.classList.add('news-content');
+
+                        const title = document.createElement('h2');
+                        const link = document.createElement('a');
+                        link.href = article.url;
+                        link.target = "_blank"; // Abre em nova aba
+                        link.textContent = article.title;
+                        title.appendChild(link);
+                        contentDiv.appendChild(title);
+
+                        // Adiciona a fonte e data
+                        const footer = document.createElement('p');
+                        const date = new Date(article.publishedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                        footer.textContent = `${article.source.name} - ${date}`;
+                        contentDiv.appendChild(footer);
+
+
+                        articleElement.appendChild(contentDiv);
+                        newsContainer.appendChild(articleElement);
+                    });
+                } else {
+                    newsContainer.innerHTML = '<p>Nenhuma notícia encontrada no momento.</p>';
+                }
+
+            } catch (error) {
+                console.error('Erro ao buscar notícias:', error);
+                newsContainer.innerHTML = '<p>Ocorreu um erro ao carregar as notícias. Tente novamente mais tarde.</p>';
+            }
+        }
+
+        // Carrega as notícias quando a página carregar
+        window.onload = fetchNews;
+    </script>
 </body>
 </html>
