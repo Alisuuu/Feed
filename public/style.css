@@ -1,0 +1,77 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 10px;
+}
+
+.news-item {
+    background-color: #fff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex; /* Para alinhar imagem e texto lado a lado */
+    gap: 15px; /* Espaço entre a imagem e o conteúdo */
+}
+
+.news-item img {
+    max-width: 150px; /* Ajuste conforme necessário */
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
+}
+
+.news-content {
+    flex-grow: 1; /* Permite que o conteúdo ocupe o espaço restante */
+}
+
+
+.news-item h2 {
+    margin-top: 0;
+    font-size: 1.2em;
+}
+
+.news-item h2 a {
+    text-decoration: none;
+    color: #333;
+}
+
+.news-item h2 a:hover {
+    color: #007bff;
+}
+
+.news-item p {
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Responsividade básica */
+@media (max-width: 600px) {
+    .news-item {
+        flex-direction: column; /* Empilha os elementos em telas menores */
+        align-items: center; /* Centraliza os itens */
+    }
+
+    .news-item img {
+        max-width: 100%; /* Imagem ocupa a largura total */
+        margin-bottom: 10px; /* Espaço abaixo da imagem */
+    }
+}
