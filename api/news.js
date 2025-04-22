@@ -8,13 +8,17 @@ export default async function handler(request, response) {
     }
 
     try {
-        // Busca a query personalizada da URL (?q=texto)
-        const searchQuery = request.query.q || 'cinema OR filme OR série OR hollywood OR crítica';
+        // Termo da busca vindo da query (?q=algo)
+        const userQuery = request.query.q || '';
 
-        // Monta a URL com os parâmetros da API
+        // Garante que a busca continue relacionada a cinema, filmes ou séries
+        const baseQuery = 'cinema OR filme OR série OR hollywood OR crítica';
+        const finalQuery = userQuery ? `(${userQuery}) AND (${baseQuery})` : baseQuery;
+
+        // Monta a URL com parâmetros
         const apiUrl = new URL('https://newsapi.org/v2/everything');
         const params = {
-            q: searchQuery,
+            q: finalQuery,
             language: 'pt',
             sortBy: 'publishedAt',
             pageSize: 20,
