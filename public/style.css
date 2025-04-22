@@ -55,6 +55,7 @@ main {
     z-index: 1; /* Abaixo do overlay e do texto */
     filter: brightness(0.4) grayscale(0.2); /* Escurece e dessatura a imagem para legibilidade do texto */
     transition: transform 0.3s ease; /* Transição para efeito hover */
+    height: 300px;
 }
 
 .news-item:hover img {
