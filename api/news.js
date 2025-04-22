@@ -11,8 +11,8 @@ export default async function handler(request, response) {
   const language = 'pt';
   const sortBy = 'publishedAt';
 
-  // IDs das fontes especializadas em cinema na NewsAPI
-  const sources = 'cinemarapadura,omelete,jovemnerd';  // Certifique-se de que essas fontes são válidas
+  // Usando o Google News Brasil como fonte
+  const sources = 'google-news-br';
 
   const newsUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=${sortBy}&sources=${sources}&apiKey=${apiKey}`;
 
