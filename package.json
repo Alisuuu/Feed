@@ -1,4 +1,15 @@
-"dependencies": {
-  "node-fetch": "^2.6.7" // Use a versão mais recente ou a que preferir
-  // ... outras dependências se houver
+{
+  "name": "cinema-news",
+  "version": "1.0.0",
+  "description": "Simple news page",
+  "main": "api/news.js", // Ou o ponto de entrada principal se aplicável
+  "scripts": {
+    "start": "vercel dev" // Exemplo para rodar localmente com vercel-cli
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7" // A versão exata pode variar
+  },
+  "devDependencies": {
+    // Ferramentas de desenvolvimento, se houver
+  }
 }
