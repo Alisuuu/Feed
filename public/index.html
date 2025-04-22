@@ -34,13 +34,15 @@
                         if (article.urlToImage) {
                             const img = document.createElement('img');
                             img.src = article.urlToImage;
-                            img.alt = article.title;
+                            img.alt = article.title || 'Imagem da notícia'; // Adiciona alt com fallback
+                            img.loading = 'lazy'; // Carregamento preguiçoso para performance
                             articleElement.appendChild(img);
                         }
 
                         const contentDiv = document.createElement('div');
                         contentDiv.classList.add('news-content');
 
+                        // Título da notícia
                         const title = document.createElement('h2');
                         const link = document.createElement('a');
                         link.href = article.url;
@@ -48,6 +50,23 @@
                         link.textContent = article.title;
                         title.appendChild(link);
                         contentDiv.appendChild(title);
+
+                        // Adiciona o resumo (descrição) ou trecho do conteúdo
+                        if (article.description) {
+                            const description = document.createElement('p');
+                            description.textContent = article.description;
+                            contentDiv.appendChild(description);
+                        } else if (article.content) {
+                             // Se não houver descrição, usa o conteúdo e trunca se necessário
+                             const contentSnippet = document.createElement('p');
+                             // NewsAPI content often ends with "[+XXX chars]". Remove that.
+                             const cleanContent = article.content.replace(/\[\+\d+ chars\]$/, '');
+                             // Pega os primeiros 150 caracteres (ajuste conforme necessário) e adiciona "..." se for maior
+                             const snippetText = cleanContent.length > 150 ? cleanContent.substring(0, 150) + '...' : cleanContent;
+                             contentSnippet.textContent = snippetText;
+                             contentDiv.appendChild(contentSnippet);
+                        }
+
 
                         // Adiciona a fonte e data
                         const footer = document.createElement('p');
