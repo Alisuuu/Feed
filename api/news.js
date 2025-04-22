@@ -7,10 +7,7 @@ export default async function handler(request, response) {
     return response.status(500).json({ error: 'NEWS_API_KEY não configurada.' });
   }
 
-  // Refinar busca para focar só em cinema/séries e excluir temas indesejados
-  const query = `("cinema" OR "filmes" OR "séries" OR "crítica de filme" OR "estreia de filme" OR "trailer de filme" OR "trailer de série")
-  -futebol -esporte -política -economia -mercado -finanças -negócios -ações`;
-
+  const query = `"cinema" OR "filmes" OR "séries" OR "estreia de filme" OR "nova série" OR "crítica de filme" OR "crítica de série" OR "trailer de filme" OR "trailer de série" OR "indústria cinematográfica"`;
   const language = 'pt';
   const sortBy = 'publishedAt';
 
@@ -21,12 +18,22 @@ export default async function handler(request, response) {
     const data = await apiResponse.json();
 
     if (data.status === 'ok') {
-      response.status(200).json(data);
+      const unwanted = [
+        'economia', 'futebol', 'esporte', 'finanças', 'negócios', 'política',
+        'mercado', 'ações', 'tecnologia', 'inteligência artificial', 'ia',
+        'monitor', 'celular', 'notebook', 'smartphone', 'dispositivo', 'hardware'
+      ];
+
+      const filteredArticles = data.articles.filter(article => {
+        const text = `${article.title} ${article.description || ''}`.toLowerCase();
+        return !unwanted.some(term => text.includes(term));
+      });
+
+      response.status(200).json({ ...data, articles: filteredArticles });
     } else {
       console.error('Erro da NewsAPI:', data.code, data.message);
       response.status(apiResponse.status).json({ error: data.message || 'Erro ao buscar notícias da NewsAPI.' });
     }
-
   } catch (error) {
     console.error('Erro ao chamar NewsAPI:', error);
     response.status(500).json({ error: 'Erro interno ao buscar notícias.' });
