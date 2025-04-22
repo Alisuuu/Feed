@@ -114,7 +114,7 @@
                     data.articles.forEach(article => {
                         const articleElement = document.createElement('article');
                         articleElement.classList.add('news-item');
-                        articleElement.onclick = () => openModal(article.title, article.description);
+                        articleElement.onclick = () => openModal(article.title, article.description); // Altere aqui para abrir o modal
 
                         // Adiciona a imagem (pôster) se existir
                         const img = document.createElement('img');
