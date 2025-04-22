@@ -11,8 +11,8 @@ export default async function handler(request, response) {
   const language = 'pt';
   const sortBy = 'publishedAt';
 
-  // Fontes especializadas em cinema
-  const sources = 'cinemarapadura,omelete,jovemnerd';
+  // IDs das fontes especializadas em cinema na NewsAPI
+  const sources = 'cinemarapadura,omelete,jovemnerd';  // Certifique-se de que essas fontes são válidas
 
   const newsUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=${language}&sortBy=${sortBy}&sources=${sources}&apiKey=${apiKey}`;
 
