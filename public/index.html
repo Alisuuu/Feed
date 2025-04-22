@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Notícias de Cinema</title>
+    <title>Notícias de Cinema, Filmes e Séries</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Últimas Notícias de Cinema</h1>
-    </header>
-
+    <!-- Removido o header para não ter barra no topo -->
     <main id="news-container">
         <p>Carregando notícias...</p>
     </main>
@@ -31,12 +28,19 @@
                         const articleElement = document.createElement('article');
                         articleElement.classList.add('news-item');
 
-                        // Adiciona a imagem, se houver
-                        if (article.image) {
+                        // Adiciona a imagem (pôster) se existir
+                        if (article.urlToImage) {
                             const img = document.createElement('img');
-                            img.src = article.image;
-                            img.alt = article.title || 'Imagem da notícia';
+                            img.src = article.urlToImage;
+                            img.alt = article.title || 'Imagem da notícia'; // Adiciona alt com fallback
                             img.loading = 'lazy'; // Carregamento preguiçoso
+                            articleElement.appendChild(img);
+                        } else {
+                            // Se não tiver imagem, exibe uma imagem padrão
+                            const img = document.createElement('img');
+                            img.src = 'default-image.jpg';  // Imagem padrão
+                            img.alt = 'Imagem não disponível';
+                            img.loading = 'lazy';
                             articleElement.appendChild(img);
                         }
 
@@ -61,7 +65,8 @@
 
                         // Adiciona a fonte e data
                         const footer = document.createElement('p');
-                        footer.textContent = `${article.source} - ${article.publishedAt}`;
+                        const date = new Date(article.publishedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                        footer.textContent = `${article.source.name} - ${date}`;
                         contentDiv.appendChild(footer);
 
                         articleElement.appendChild(contentDiv);
