@@ -1,0 +1,4 @@
+"dependencies": {
+  "node-fetch": "^2.6.7" // Use a versão mais recente ou a que preferir
+  // ... outras dependências se houver
+}
