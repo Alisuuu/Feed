@@ -19,11 +19,28 @@ export default async function handler(request, response) {
 
     if (data.status === 'ok') {
       const unwanted = [
+        // Política/Economia/Esportes
         'economia', 'futebol', 'esporte', 'finanças', 'negócios', 'política',
-        'mercado', 'ações', 'tecnologia', 'inteligência artificial', 'ia',
-        'monitor', 'celular', 'notebook', 'smartphone', 'dispositivo', 'hardware',
+        'mercado', 'ações', 'bolsa', 'trabalho', 'emprego',
+
+        // Tecnologia
+        'tecnologia', 'inteligência artificial', 'ia', 'monitor', 'celular',
+        'notebook', 'smartphone', 'dispositivo', 'hardware', 'software',
+
+        // Música
         'música', 'cantor', 'banda', 'álbum', 'lançamento musical',
-        'curitiba', 'cidade', 'turismo', 'viagem', 'gastronomia', 'evento local'
+
+        // Turismo e cotidiano
+        'curitiba', 'cidade', 'turismo', 'viagem', 'gastronomia', 'evento local',
+
+        // Moda / Comércio
+        'moda', 'roupa', 'estilo', 'tendência', 'varejo', 'e-commerce', 'loja virtual', 'shein',
+
+        // Política internacional / Trump / China
+        'trump', 'china', 'geopolítica', 'comércio exterior', 'sanção', 'importação',
+
+        // Games
+        'jogo', 'jogos', 'videogame', 'game', 'xbox', 'playstation', 'switch', 'nintendo', 'steam'
       ];
 
       const filteredArticles = data.articles.filter(article => {
