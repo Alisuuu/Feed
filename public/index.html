@@ -1,71 +1,84 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <link rel="stylesheet" href="style.css" />
-  <title>Notícias de Cinema</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Notícias de Cinema</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main id="news-container">
-    <p>Carregando notícias...</p>
-  </main>
+    <header>
+        <h1>Últimas Notícias de Cinema</h1>
+    </header>
 
-  <script>
-    async function fetchNews() {
-      const newsContainer = document.getElementById('news-container');
-      newsContainer.innerHTML = '<p>Carregando notícias...</p>';
+    <main id="news-container">
+        <p>Carregando notícias...</p>
+    </main>
 
-      try {
-        const response = await fetch('/api/news');
-        const data = await response.json();
+    <script>
+        async function fetchNews() {
+            const newsContainer = document.getElementById('news-container');
+            newsContainer.innerHTML = '<p>Carregando notícias...</p>'; // Limpa e mostra carregando
 
-        if (data.noticias && data.noticias.length > 0) {
-          newsContainer.innerHTML = '';
+            try {
+                // Chama a API que você configurou no backend
+                const response = await fetch('/api/news');
+                const data = await response.json();
 
-          data.noticias.forEach(article => {
-            const articleElement = document.createElement('article');
-            articleElement.classList.add('news-item');
+                if (data.status === 'ok' && data.articles && data.articles.length > 0) {
+                    newsContainer.innerHTML = ''; // Limpa a mensagem de carregamento
+                    data.articles.forEach(article => {
+                        const articleElement = document.createElement('article');
+                        articleElement.classList.add('news-item');
 
-            if (article.image) {
-              const img = document.createElement('img');
-              img.src = article.image;
-              img.alt = article.title || 'Imagem da notícia';
-              img.loading = 'lazy';
-              articleElement.appendChild(img);
+                        // Adiciona a imagem, se houver
+                        if (article.image) {
+                            const img = document.createElement('img');
+                            img.src = article.image;
+                            img.alt = article.title || 'Imagem da notícia';
+                            img.loading = 'lazy'; // Carregamento preguiçoso
+                            articleElement.appendChild(img);
+                        }
+
+                        const contentDiv = document.createElement('div');
+                        contentDiv.classList.add('news-content');
+
+                        // Título da notícia com link
+                        const title = document.createElement('h2');
+                        const link = document.createElement('a');
+                        link.href = article.url;
+                        link.target = "_blank"; // Abre em uma nova aba
+                        link.textContent = article.title;
+                        title.appendChild(link);
+                        contentDiv.appendChild(title);
+
+                        // Descrição ou trecho do conteúdo
+                        if (article.description) {
+                            const description = document.createElement('p');
+                            description.textContent = article.description;
+                            contentDiv.appendChild(description);
+                        }
+
+                        // Adiciona a fonte e data
+                        const footer = document.createElement('p');
+                        footer.textContent = `${article.source} - ${article.publishedAt}`;
+                        contentDiv.appendChild(footer);
+
+                        articleElement.appendChild(contentDiv);
+                        newsContainer.appendChild(articleElement);
+                    });
+                } else {
+                    newsContainer.innerHTML = '<p>Nenhuma notícia encontrada no momento.</p>';
+                }
+
+            } catch (error) {
+                console.error('Erro ao buscar notícias:', error);
+                newsContainer.innerHTML = '<p>Ocorreu um erro ao carregar as notícias. Tente novamente mais tarde.</p>';
             }
-
-            const contentDiv = document.createElement('div');
-            contentDiv.classList.add('news-content');
-
-            const title = document.createElement('h2');
-            const link = document.createElement('a');
-            link.href = article.link;
-            link.target = "_blank";
-            link.textContent = article.title;
-            title.appendChild(link);
-            contentDiv.appendChild(title);
-
-            if (article.sinopse) {
-              const description = document.createElement('p');
-              description.textContent = article.sinopse;
-              contentDiv.appendChild(description);
-            }
-
-            articleElement.appendChild(contentDiv);
-            newsContainer.appendChild(articleElement);
-          });
-        } else {
-          newsContainer.innerHTML = '<p>Nenhuma notícia encontrada no momento.</p>';
         }
 
-      } catch (error) {
-        console.error('Erro ao buscar notícias:', error);
-        newsContainer.innerHTML = '<p>Ocorreu um erro ao carregar as notícias. Tente novamente mais tarde.</p>';
-      }
-    }
-
-    window.onload = fetchNews;
-  </script>
+        // Carrega as notícias ao carregar a página
+        window.onload = fetchNews;
+    </script>
 </body>
 </html>
