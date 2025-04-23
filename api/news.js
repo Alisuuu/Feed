@@ -8,13 +8,11 @@ export default async function handler(request, response) {
     }
 
     try {
-        // Configura a URL para buscar notícias recentes sobre cinema, filmes e séries
+        // 1. Configurar URL para busca de notícias sobre filmes e séries
         const apiUrl = new URL('https://newsapi.org/v2/everything');
         const params = {
-            q: 'cinema OR filme OR série OR hollywood OR crítica',
+            q: 'cinema OR filme OR série OR hollywood OR crítica',  // Usando palavras-chave para cinema, filmes e séries
             language: 'pt',
-            sortBy: 'publishedAt', // Garante que as notícias venham ordenadas por data
-            pageSize: 30, // Define o número de notícias a retornar (opcional)
             apiKey: apiKey
         };
         Object.keys(params).forEach(key => apiUrl.searchParams.append(key, params[key]));
@@ -23,7 +21,6 @@ export default async function handler(request, response) {
         const apiData = await apiResponse.json();
 
         if (apiData.status === 'ok' && apiData.articles && apiData.articles.length > 0) {
-            response.setHeader('Cache-Control', 'no-store'); // Evita cache
             response.status(200).json({
                 status: 'ok',
                 count: apiData.articles.length,
