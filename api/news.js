@@ -12,7 +12,7 @@ export default async function handler(request, response) {
         const params = {
             // MODIFICADO: Usando apenas 'cinema' como termo de busca principal.
             // Isso torna o filtro mais restrito.
-            q: 'cinema',
+            q: 'cinema', 'série', 'séries', 'marvel', 'Dc', 'filme', 'netflix', 'diney plus', 'prime vídeo',
             language: 'pt',
             sortBy: 'publishedAt', // Mantido para garantir que as notícias mais recentes venham primeiro
             apiKey: apiKey
