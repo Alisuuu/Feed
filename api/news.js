@@ -10,7 +10,7 @@ export default async function handler(request, response) {
     try {
         const apiUrl = new URL('https://newsapi.org/v2/everything');
         const params = {
-            q: 'cinema OR série OR séries OR marvel OR dc OR filme OR netflix OR "disney plus" OR "prime video"',
+            q: 'cinema OR séries OR marvel OR dc OR filme OR netflix OR "disney plus" OR "prime video"',
             language: 'pt',
             sortBy: 'publishedAt',
             apiKey: apiKey
