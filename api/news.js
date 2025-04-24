@@ -10,14 +10,15 @@ export default async function handler(request, response) {
     try {
         const apiUrl = new URL('https://newsapi.org/v2/everything');
         const params = {
-            // MODIFICADO: Usando apenas 'cinema' como termo de busca principal.
-            // Isso torna o filtro mais restrito.
-            q: 'cinema', 'série', 'séries', 'marvel', 'Dc', 'filme', 'netflix', 'diney plus', 'prime vídeo',
+            q: 'cinema OR série OR séries OR marvel OR dc OR filme OR netflix OR "disney plus" OR "prime video"',
             language: 'pt',
-            sortBy: 'publishedAt', // Mantido para garantir que as notícias mais recentes venham primeiro
+            sortBy: 'publishedAt',
             apiKey: apiKey
         };
-        Object.keys(params).forEach(key => apiUrl.searchParams.append(key, params[key]));
+
+        Object.keys(params).forEach(key => {
+            apiUrl.searchParams.append(key, params[key]);
+        });
 
         const apiResponse = await fetch(apiUrl.toString());
         const apiData = await apiResponse.json();
@@ -30,25 +31,27 @@ export default async function handler(request, response) {
                     articles: apiData.articles
                 });
             } else {
-                 // API retornou sucesso, mas sem artigos correspondentes encontrados para o novo filtro
-                 response.status(200).json({
+                response.status(200).json({
                     status: 'ok',
                     count: 0,
                     articles: [],
                     message: 'Nenhum artigo encontrado para os critérios de busca recentes.'
-                 });
+                });
             }
         } else {
-             console.error('Erro da API:', apiData.code, apiData.message);
-             response.status(400).json({
+            console.error('Erro da API:', apiData.code, apiData.message);
+            response.status(400).json({
                 status: 'error',
                 code: apiData.code,
                 message: apiData.message || 'Erro desconhecido retornado pela API de notícias.'
-             });
+            });
         }
 
     } catch (error) {
         console.error('Erro geral ao buscar notícias:', error);
-        response.status(500).json({ status: 'error', message: 'Erro interno do servidor ao processar a requisição.' });
+        response.status(500).json({
+            status: 'error',
+            message: 'Erro interno do servidor ao processar a requisição.'
+        });
     }
 }
