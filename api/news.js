@@ -10,7 +10,9 @@ export default async function handler(request, response) {
     try {
         const apiUrl = new URL('https://newsapi.org/v2/everything');
         const params = {
-            q: 'cinema OR séries OR marvel OR dc OR filme OR netflix OR "disney plus" OR "prime video" OR hbo OR max',
+            // Usando o prefixo '-' antes de cada termo a ser excluído
+            // Para termos múltiplos ("big brother brasil", por exemplo), use aspas: -"big brother brasil"
+            q: 'cinema OR séries OR marvel OR dc OR filme OR netflix OR "disney plus" OR "prime video" OR hbo OR max -futebol -novela -atriz -bbb -games',
             language: 'pt',
             sortBy: 'publishedAt',
             apiKey: apiKey
@@ -24,18 +26,33 @@ export default async function handler(request, response) {
         const apiData = await apiResponse.json();
 
         if (apiData.status === 'ok') {
-            if (apiData.articles && apiData.articles.length > 0) {
+             // Manter o filtro no código é uma boa prática
+            const termsToExclude = ['futebol', 'novela', 'atriz', 'bbb', 'games'];
+            const filteredArticles = apiData.articles.filter(article => {
+                const lowerCaseTitle = article.title ? article.title.toLowerCase() : '';
+                const lowerCaseDescription = article.description ? article.description.toLowerCase() : '';
+                
+                // Verifica se algum termo a ser excluído está presente no título ou descrição
+                const containsExcludedTerm = termsToExclude.some(term => 
+                    lowerCaseTitle.includes(term) || lowerCaseDescription.includes(term)
+                );
+                
+                // Retorna true apenas se o artigo NÃO contiver os termos a serem excluídos
+                return !containsExcludedTerm;
+            });
+
+            if (filteredArticles.length > 0) {
                 response.status(200).json({
                     status: 'ok',
-                    count: apiData.articles.length,
-                    articles: apiData.articles
+                    count: filteredArticles.length,
+                    articles: filteredArticles
                 });
             } else {
                 response.status(200).json({
                     status: 'ok',
                     count: 0,
                     articles: [],
-                    message: 'Nenhum artigo encontrado para os critérios de busca recentes.'
+                    message: 'Nenhum artigo relevante encontrado após a filtragem.'
                 });
             }
         } else {
