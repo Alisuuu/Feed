@@ -27,7 +27,7 @@ export default async function handler(request, response) {
 
         if (apiData.status === 'ok') {
              // Manter o filtro no código é uma boa prática
-            const termsToExclude = ['futebol', 'novela', 'atriz', 'bbb', 'games'];
+            const termsToExclude = ['futebol', 'novela', 'atriz', 'bbb', 'games', 'tecnologia', 'smartphone', 'celular', 'globo', 'musica', 'eua', 'papa', 'tv', 'bet', 'windows', 'one ui', 'gamer', 'comidas', 'youtube'];
             const filteredArticles = apiData.articles.filter(article => {
                 const lowerCaseTitle = article.title ? article.title.toLowerCase() : '';
                 const lowerCaseDescription = article.description ? article.description.toLowerCase() : '';
