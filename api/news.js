@@ -12,7 +12,7 @@ export default async function handler(request, response) {
         const params = {
             // Usando o prefixo '-' antes de cada termo a ser excluído
             // Para termos múltiplos ("big brother brasil", por exemplo), use aspas: -"big brother brasil"
-            q: 'cinema OR séries OR marvel OR dc OR filme OR netflix OR "disney plus" OR "prime video" OR hbo OR max -futebol -novela -atriz -bbb -games',
+            q: 'cinema OR séries OR marvel OR dc OR filme OR netflix OR "disney plus" OR "prime video" OR hbo OR max',
             language: 'pt',
             sortBy: 'publishedAt',
             apiKey: apiKey
