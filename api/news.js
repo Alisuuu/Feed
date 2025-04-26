@@ -10,9 +10,8 @@ export default async function handler(request, response) {
     try {
         const apiUrl = new URL('https://newsapi.org/v2/everything');
         const params = {
-            // Usando o prefixo '-' antes de cada termo a ser excluído
-            // Para termos múltiplos ("big brother brasil", por exemplo), use aspas: -"big brother brasil"
-            q: 'cinema OR séries OR marvel OR dc OR filme OR netflix OR "disney plus" OR "prime video" OR hbo OR max',
+            // Tornando a busca mais específica para cinema/séries
+            q: '"cinema" OR "filme" OR "filmes" OR "estreias cinema" OR "crítica filme" OR "notícias cinema" OR "bilheteria cinema" OR "box office" OR "marvel" OR "dc comics" OR "netflix" OR "disney plus" OR "prime video" OR "hbo max"',
             language: 'pt',
             sortBy: 'publishedAt',
             apiKey: apiKey
@@ -26,19 +25,38 @@ export default async function handler(request, response) {
         const apiData = await apiResponse.json();
 
         if (apiData.status === 'ok') {
-             // Manter o filtro no código é uma boa prática
-            const termsToExclude = ['futebol', 'novela', 'atriz', 'bbb', 'games', 'tecnologia', 'smartphone', 'celular', 'globo', 'musica', 'eua', 'papa', 'tv', 'bet', 'windows', 'one ui', 'gamer', 'comidas', 'youtube', 'motorola', 'android', 'nba', 'geopolitica', 'teatro', 'brinquedos', 'gta', 'time', 'times', 'documentário', 'transtorno', 'eleições', 'remedio', 'cidade', 'dorama', 'doramas', 'partido', 'jejum', 'serviços', 'brf', 'Petrobrás', 'masters', 'pc', 'ps5', 'xbox','aviões', 'avião', 'jogadores', 'anvisa', 'musica', 'musicas', 'moda', 'galaxy', 'músicas', 'músicas', 'veículos', 'veículo'];
-         const filteredArticles = apiData.articles.filter(article => {
+            // Termos que queremos excluir
+            const termsToExclude = [
+                'futebol', 'novela', 'atriz', 'bbb', 'games', 'tecnologia', 'smartphone', 'celular', 
+                'globo', 'musica', 'eua', 'papa', 'tv', 'bet', 'windows', 'one ui', 'gamer', 'comidas', 
+                'youtube', 'motorola', 'android', 'nba', 'geopolitica', 'teatro', 'brinquedos', 'gta', 
+                'time', 'times', 'documentário', 'transtorno', 'eleições', 'remedio', 'cidade', 'dorama', 
+                'doramas', 'partido', 'jejum', 'serviços', 'brf', 'Petrobrás', 'masters', 'pc', 'ps5', 'xbox',
+                'aviões', 'avião', 'jogadores', 'anvisa', 'moda', 'galaxy', 'veículos', 'veículo'
+            ];
+
+            // Termos que queremos que APAREÇAM obrigatoriamente no título ou descrição
+            const requiredTerms = ['cinema', 'filme', 'filmes', 'série', 'séries', 'marvel', 'dc', 'netflix', 'prime video', 'disney plus', 'hbo', 'hbo max'];
+
+            const filteredArticles = apiData.articles.filter(article => {
                 const lowerCaseTitle = article.title ? article.title.toLowerCase() : '';
                 const lowerCaseDescription = article.description ? article.description.toLowerCase() : '';
-                
-                // Verifica se algum termo a ser excluído está presente no título ou descrição
+                const sourceName = article.source?.name?.toLowerCase() || '';
+
+                // Primeiro: excluir se contiver termos proibidos no título, descrição ou fonte
                 const containsExcludedTerm = termsToExclude.some(term => 
-                    lowerCaseTitle.includes(term) || lowerCaseDescription.includes(term)
+                    lowerCaseTitle.includes(term) ||
+                    lowerCaseDescription.includes(term) ||
+                    sourceName.includes(term)
                 );
-                
-                // Retorna true apenas se o artigo NÃO contiver os termos a serem excluídos
-                return !containsExcludedTerm;
+                if (containsExcludedTerm) return false;
+
+                // Segundo: garantir que o título ou descrição tenha algum termo obrigatório
+                const containsRequiredTerm = requiredTerms.some(term => 
+                    lowerCaseTitle.includes(term) || 
+                    lowerCaseDescription.includes(term)
+                );
+                return containsRequiredTerm;
             });
 
             if (filteredArticles.length > 0) {
