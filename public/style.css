@@ -1,22 +1,29 @@
 /* Estilos Gerais do Corpo e Layout */
 body {
     margin: 0;
-    padding: 0; /* Removido padding-bottom, a rolagem será natural */
+    padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #000000; /* Fundo escuro */
-    color: white; /* Texto claro padrão */
-    line-height: 1.6; /* Espaçamento entre linhas para melhor legibilidade */
+    /* MD3 Applied */
+    background-color: rgba(89,59,162,0.25);
+    color: white;
+    line-height: 1.6;
 }
 
 header {
-    background-color: #1a1a1a; /* Fundo escuro para o cabeçalho */
+    /* MD3 Applied */
+    background-color: rgba(89,59,162,0.20);
+    /* MD3 Applied */
+    backdrop-filter: blur(12px);
     color: white;
-    padding: 15px 0;
+    padding: 25px 0;
     text-align: center;
-    position: sticky; /* Fixa o cabeçalho no topo ao rolar */
+    position: sticky;
     top: 0;
-    z-index: 10; /* Garante que o cabeçalho fique acima do conteúdo */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.0); /* Sombra sutil */
+    z-index: 10;
+    /* MD3 Applied */
+    border-radius: 0 0 16px 16px;
+    /* MD3 Applied */
+    border-bottom: 1px solid rgba(89,59,162,0.60);
 }
 
 h1 {
@@ -25,41 +32,45 @@ h1 {
 }
 
 main {
-    max-width: 800px; /* Largura máxima do conteúdo principal */
-    margin: 20px auto; /* Centraliza o conteúdo e adiciona margem topo/baixo */
-    padding: 0 10px; /* Padding lateral */
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 0 20px;
 }
 
 /* Estilos para Cada Item de Notícia */
 .news-item {
-    position: relative; /* Essencial para posicionar a imagem e overlay absolutamente dentro dele */
-    background-color: #1c1c1c; /* Um fundo um pouco mais claro que o body */
-    border-radius: 10px; /* Bordas arredondadas */
-    margin-bottom: 25px; /* Espaço maior entre os itens */
-    overflow: hidden; /* Garante que a imagem de fundo e overlay respeitem as bordas arredondadas */
-    height: 400px; /* Altura mínima para os itens */
-    display: flex; /* Usar flexbox para controlar o conteúdo (imagem de fundo + texto) */
-    flex-direction: column; /* Empilha a imagem de fundo e o conteúdo de texto */
-    justify-content: flex-end; /* Alinha o conteúdo de texto ao final (inferior) */
-    padding: 15px; /* Padding interno para o conteúdo de texto */
+    position: relative;
+    /* MD3 Applied */
+    background-color: rgba(89,59,162,0.20);
+    /* MD3 Applied */
+    backdrop-filter: blur(12px);
+    /* MD3 Applied */
+    border-radius: 16px;
+    margin-bottom: 35px;
+    overflow: hidden;
+    padding: 25px;
+    /* MD3 Applied */
+    border: 1px solid rgba(89,59,162,0.60);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 /* Imagem de Fundo da Notícia */
 .news-item img {
-    position: absolute; /* Posiciona a imagem absolutamente */
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Cobre a área mantendo a proporção */
-    z-index: 1; /* Abaixo do overlay e do texto */
-    filter: brightness(0.4) grayscale(0.2); /* Escurece e dessatura a imagem para legibilidade do texto */
-    transition: transform 0.3s ease; /* Transição para efeito hover */
-    height: 500px;
+    object-fit: cover;
+    z-index: 1;
+    filter: brightness(0.4) grayscale(0.2);
+    transition: transform 0.3s ease;
+    height: 250px;
+    border-radius: 16px 16px 0 0;
 }
 
 .news-item:hover img {
-    transform: scale(1.05); /* Leve zoom na imagem ao passar o mouse */
+    transform: scale(1.05);
 }
 
 
@@ -71,43 +82,43 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%); /* Gradiente escuro na parte inferior */
-    z-index: 2; /* Acima da imagem, abaixo do texto */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
+    z-index: 2;
 }
 
 /* Container para o Conteúdo de Texto */
 .news-content {
-    position: relative; /* Acima da imagem e do overlay */
+    position: relative;
     z-index: 3;
-    color: white; /* Cor do texto */
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Sombra forte para o texto */
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .news-item h2 {
     margin-top: 0;
-    margin-bottom: 5px; /* Espaço abaixo do título */
-    font-size: 1.4em; /* Tamanho maior para o título */
+    margin-bottom: 10px;
+    font-size: 1.6em;
     line-height: 1.3;
     color: #593BA2;
 }
 
 .news-item h2 a {
     text-decoration: none;
-    color: inherit; /* Herda a cor branca */
+    color: inherit;
     transition: color 0.3s ease;
 }
 
 .news-item h2 a:hover {
-    color: #cccccc; /* Cor slightly lighter on hover */
+    color: #cccccc;
 }
 
 /* Estilo para o trecho do conteúdo (descrição/snippet) */
-.news-content p:nth-of-type(1) { /* Seleciona o primeiro parágrafo dentro de news-content (que é o resumo) */
-    font-size: 0.9em;
+.news-content p:nth-of-type(1) {
+    font-size: 1em;
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Limita a 3 linhas (WebKit browsers) */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -115,9 +126,9 @@ main {
 
 
 /* Estilo para a Fonte e Data */
-.news-content p:last-child { /* Seleciona o último parágrafo (que é a fonte/data) */
-    font-size: 0.8em;
-    color: rgba(255, 255, 255, 0.7); /* Cor mais suave */
+.news-content p:last-child {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.7);
     margin-bottom: 0;
 }
 
@@ -129,23 +140,23 @@ main {
     }
 
     main {
-        padding: 0 5px; /* Menor padding lateral em telas menores */
+        padding: 0 15px;
     }
 
     .news-item {
-         padding: 10px; /* Menor padding interno */
-         min-height: 180px;
+         padding: 15px;
+         min-height: 200px;
     }
 
     .news-item h2 {
-        font-size: 1.2em;
+        font-size: 1.4em;
     }
 
     .news-content p:nth-of-type(1) {
-        font-size: 0.8em;
+        font-size: 0.9em;
     }
 
     .news-content p:last-child {
-        font-size: 0.7em;
+        font-size: 0.8em;
     }
 }
