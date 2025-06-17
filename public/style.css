@@ -1,29 +1,21 @@
-/* Estilos Gerais do Corpo e Layout */
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    /* MD3 Applied */
-    background-color: rgba(0,0,0,0.9);
+    background-color: #000000;
     color: white;
     line-height: 1.6;
 }
 
 header {
-    /* MD3 Applied */
-    background-color: rgba(89,59,162,0.20);
-    /* MD3 Applied */
-    backdrop-filter: blur(12px);
+    background-color: #1a1a1a;
     color: white;
-    padding: 25px 0;
+    padding: 15px 0;
     text-align: center;
     position: sticky;
     top: 0;
     z-index: 10;
-    /* MD3 Applied */
-    border-radius: 0 0 16px 16px;
-    /* MD3 Applied */
-    border-bottom: 1px solid rgba(89,59,162,0.60);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.0);
 }
 
 h1 {
@@ -33,28 +25,24 @@ h1 {
 
 main {
     max-width: 800px;
-    margin: 30px auto;
-    padding: 0 20px;
+    margin: 20px auto;
+    padding: 0 10px;
 }
 
-/* Estilos para Cada Item de Notícia */
 .news-item {
     position: relative;
-    /* MD3 Applied */
-    background-color: rgba(89,59,162,0.20);
-    /* MD3 Applied */
-    backdrop-filter: blur(12px);
-    /* MD3 Applied */
-    border-radius: 16px;
-    margin-bottom: 35px;
+    background-color: #1c1c1c;
+    border-radius: 10px;
+    margin-bottom: 25px;
     overflow: hidden;
-    padding: 25px;
-    /* MD3 Applied */
-    border: 1px solid rgba(89,59,162,0.60);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
-/* Imagem de Fundo da Notícia */
 .news-item img {
     position: absolute;
     top: 0;
@@ -65,16 +53,12 @@ main {
     z-index: 1;
     filter: brightness(0.4) grayscale(0.2);
     transition: transform 0.3s ease;
-    height: 250px;
-    border-radius: 16px 16px 0 0;
 }
 
 .news-item:hover img {
     transform: scale(1.05);
 }
 
-
-/* Overlay Semi-transparente sobre a Imagem */
 .news-item::before {
     content: "";
     position: absolute;
@@ -86,7 +70,6 @@ main {
     z-index: 2;
 }
 
-/* Container para o Conteúdo de Texto */
 .news-content {
     position: relative;
     z-index: 3;
@@ -96,8 +79,8 @@ main {
 
 .news-item h2 {
     margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.6em;
+    margin-bottom: 5px;
+    font-size: 1.4em;
     line-height: 1.3;
     color: #593BA2;
 }
@@ -112,11 +95,10 @@ main {
     color: #cccccc;
 }
 
-/* Estilo para o trecho do conteúdo (descrição/snippet) */
 .news-content p:nth-of-type(1) {
-    font-size: 1em;
+    font-size: 0.9em;
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -124,39 +106,74 @@ main {
     text-overflow: ellipsis;
 }
 
-
-/* Estilo para a Fonte e Data */
 .news-content p:last-child {
-    font-size: 0.9em;
+    font-size: 0.8em;
     color: rgba(255, 255, 255, 0.7);
     margin-bottom: 0;
 }
 
-
-/* Responsividade básica */
 @media (max-width: 600px) {
     h1 {
         font-size: 1.5em;
     }
 
     main {
-        padding: 0 15px;
+        padding: 0 5px;
     }
 
     .news-item {
-         padding: 15px;
-         min-height: 200px;
+         padding: 10px;
+         height: 250px;
+         margin-bottom: 15px;
     }
 
     .news-item h2 {
-        font-size: 1.4em;
+        font-size: 1.2em;
     }
 
     .news-content p:nth-of-type(1) {
-        font-size: 0.9em;
+        font-size: 0.8em;
+        -webkit-line-clamp: 2;
     }
 
     .news-content p:last-child {
-        font-size: 0.8em;
+        font-size: 0.7em;
+    }
+}
+
+@media (min-width: 768px) {
+    main {
+        max-width: none;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .news-item {
+        margin-bottom: 0;
+        height: 350px;
+    }
+
+     .news-item h2 {
+        font-size: 1.5em;
+    }
+
+    .news-content p:nth-of-type(1) {
+        font-size: 1em;
+        -webkit-line-clamp: 4;
+    }
+
+    .news-content p:last-child {
+        font-size: 0.9em;
+    }
+}
+
+@media (min-width: 1200px) {
+    main {
+        gap: 30px;
+    }
+     .news-item {
+        height: 400px;
     }
 }
