@@ -4,38 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Notícias de Cinema, Filmes e Séries</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome (para ícones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- CSS Personalizado -->
     <link rel="stylesheet" href="style.css">
-    <!-- Adicionando ícone para a busca -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+
+    <!-- Cabeçalho com efeito de vidro e busca -->
     <header>
-        <h1></h1>
-        <form id="search-form">
-            <input type="text" id="search-input" placeholder="Buscar por filmes, séries, atores...">
-            <button type="submit"><i class="fas fa-search"></i></button>
-        </form>
+        <div class="container">
+                   <form id="search-form" class="input-search-wrapper">
+                    <input type="text" id="search-input" class="input-search" placeholder="Buscar notícias...">
+                    <button type="submit" id="searchButton" aria-label="Buscar"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
     </header>
 
-    <main id="news-container">
-        <p class="loading-message">Carregando notícias...</p>
+    <!-- Área de conteúdo principal -->
+    <main id="contentArea">
+        <div id="news-grid" class="main-results-grid">
+            <!-- As notícias serão inseridas aqui pelo JavaScript -->
+            <div class="loader"></div>
+        </div>
     </main>
 
     <script>
-        const newsContainer = document.getElementById('news-container');
+        const newsGrid = document.getElementById('news-grid');
         const searchForm = document.getElementById('search-form');
         const searchInput = document.getElementById('search-input');
 
         /**
-         * Busca notícias na API com base em uma consulta opcional.
+         * Busca e exibe as notícias.
          * @param {string} query - O termo de busca (opcional).
          */
         async function fetchNews(query = '') {
-            // Exibe a mensagem de carregamento
-            newsContainer.innerHTML = '<p class="loading-message">Carregando notícias...</p>';
+            // Exibe o spinner de carregamento
+            newsGrid.innerHTML = '<div class="loader"></div>';
 
             try {
-                // Constrói a URL da API, adicionando a query se ela existir
                 let apiUrl = '/api/news';
                 if (query) {
                     apiUrl += `?q=${encodeURIComponent(query)}`;
@@ -44,80 +59,70 @@
                 const response = await fetch(apiUrl);
                 const data = await response.json();
 
-                // Limpa o contêiner antes de adicionar novos artigos
-                newsContainer.innerHTML = '';
+                // Limpa a grade antes de adicionar novos cards
+                newsGrid.innerHTML = '';
 
                 if (data.status === 'ok' && data.articles && data.articles.length > 0) {
                     data.articles.forEach(article => {
-                        // Evita renderizar artigos sem título ou imagem
-                        if (!article.title || !article.urlToImage) {
+                        // Pula artigos que não possuem os dados essenciais
+                        if (!article.title || !article.urlToImage || !article.url) {
                             return;
                         }
 
-                        const articleElement = document.createElement('article');
-                        articleElement.classList.add('news-item');
+                        // Cria o card de notícia com a nova estrutura e classes
+                        const cardLink = document.createElement('a');
+                        cardLink.href = article.url;
+                        cardLink.target = "_blank";
+                        cardLink.rel = "noopener noreferrer";
+                        cardLink.classList.add('content-card');
+                        cardLink.setAttribute('aria-label', article.title);
 
                         const img = document.createElement('img');
                         img.src = article.urlToImage;
-                        img.alt = article.title;
-                        img.loading = 'lazy'; // Carregamento preguiçoso de imagens
-                        // Fallback para imagem padrão em caso de erro
+                        img.alt = `Capa da notícia: ${article.title}`;
+                        img.loading = 'lazy';
+                         // Imagem padrão em caso de erro
                         img.onerror = function() {
-                            this.onerror=null;
-                            this.src='default-image.jpg';
-                            this.alt='Imagem não disponível';
+                            this.onerror = null;
+                            this.src = 'https://placehold.co/400x600/121212/F3F4F6?text=Notícia';
+                            this.alt = 'Imagem da notícia indisponível';
                         };
-                        articleElement.appendChild(img);
 
-                        const contentDiv = document.createElement('div');
-                        contentDiv.classList.add('news-content');
+                        const titleOverlay = document.createElement('div');
+                        titleOverlay.classList.add('title-overlay');
 
-                        const title = document.createElement('h2');
-                        const link = document.createElement('a');
-                        link.href = article.url;
-                        link.target = "_blank"; // Abre em nova aba
-                        link.rel = "noopener noreferrer"; // Boa prática de segurança
-                        link.textContent = article.title;
-                        title.appendChild(link);
-                        contentDiv.appendChild(title);
+                        const title = document.createElement('h3');
+                        title.classList.add('title');
+                        title.textContent = article.title;
 
-                        if (article.description) {
-                            const description = document.createElement('p');
-                            description.textContent = article.description;
-                            contentDiv.appendChild(description);
-                        }
+                        titleOverlay.appendChild(title);
+                        cardLink.appendChild(img);
+                        cardLink.appendChild(titleOverlay);
 
-                        const footer = document.createElement('p');
-                        const date = new Date(article.publishedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                        footer.textContent = `${article.source.name} - ${date}`;
-                        contentDiv.appendChild(footer);
-
-                        articleElement.appendChild(contentDiv);
-                        newsContainer.appendChild(articleElement);
+                        newsGrid.appendChild(cardLink);
                     });
                 } else {
-                    // Mensagem mais amigável se não encontrar resultados para a busca
-                    if(query){
-                         newsContainer.innerHTML = `<p class="error-message">Nenhum resultado encontrado para "${query}". Tente um termo diferente.</p>`;
-                    } else {
-                         newsContainer.innerHTML = '<p class="error-message">Nenhuma notícia encontrada no momento.</p>';
-                    }
+                    // Mensagem de erro ou nenhum resultado
+                    let message = query 
+                        ? `Nenhum resultado para "${query}".`
+                        : "Nenhuma notícia encontrada no momento.";
+                    newsGrid.innerHTML = `<p class="error-message">${message}</p>`;
                 }
 
             } catch (error) {
                 console.error('Erro ao buscar notícias:', error);
-                newsContainer.innerHTML = '<p class="error-message">Ocorreu um erro ao carregar as notícias. Tente novamente mais tarde.</p>';
+                newsGrid.innerHTML = '<p class="error-message">Ops! Algo deu errado. Tente novamente mais tarde.</p>';
             }
         }
 
-        // Adiciona o listener para o evento de submit do formulário de busca
+        // Listener para o formulário de busca
         searchForm.addEventListener('submit', (event) => {
-            event.preventDefault(); // Impede o recarregamento da página
+            event.preventDefault();
             const searchTerm = searchInput.value.trim();
             fetchNews(searchTerm);
         });
 
-        // Carrega as notícias iniciais quando a página é carregada
+        // Carregamento inicial das notícias
         window.onload = () => fetchNews();
     </script>
 </body>
