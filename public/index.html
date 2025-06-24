@@ -5,65 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Notícias de Cinema, Filmes e Séries</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Adicionando ícone para a busca -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <!-- Removido o header para não ter barra no topo -->
+    <header>
+        <h1>Cinema News</h1>
+        <form id="search-form">
+            <input type="text" id="search-input" placeholder="Buscar por filmes, séries, atores...">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+    </header>
+
     <main id="news-container">
-        <p>Carregando notícias...</p>
+        <p class="loading-message">Carregando notícias...</p>
     </main>
 
     <script>
-        async function fetchNews() {
-            const newsContainer = document.getElementById('news-container');
-            newsContainer.innerHTML = '<p>Carregando notícias...</p>'; // Limpa e mostra carregando
+        const newsContainer = document.getElementById('news-container');
+        const searchForm = document.getElementById('search-form');
+        const searchInput = document.getElementById('search-input');
+
+        /**
+         * Busca notícias na API com base em uma consulta opcional.
+         * @param {string} query - O termo de busca (opcional).
+         */
+        async function fetchNews(query = '') {
+            // Exibe a mensagem de carregamento
+            newsContainer.innerHTML = '<p class="loading-message">Carregando notícias...</p>';
 
             try {
-                // Chama a API que você configurou no backend
-                const response = await fetch('/api/news');
+                // Constrói a URL da API, adicionando a query se ela existir
+                let apiUrl = '/api/news';
+                if (query) {
+                    apiUrl += `?q=${encodeURIComponent(query)}`;
+                }
+
+                const response = await fetch(apiUrl);
                 const data = await response.json();
 
+                // Limpa o contêiner antes de adicionar novos artigos
+                newsContainer.innerHTML = '';
+
                 if (data.status === 'ok' && data.articles && data.articles.length > 0) {
-                    newsContainer.innerHTML = ''; // Limpa a mensagem de carregamento
                     data.articles.forEach(article => {
+                        // Evita renderizar artigos sem título ou imagem
+                        if (!article.title || !article.urlToImage) {
+                            return;
+                        }
+
                         const articleElement = document.createElement('article');
                         articleElement.classList.add('news-item');
 
-                        // Adiciona a imagem (pôster) se existir
-                        if (article.urlToImage) {
-                            const img = document.createElement('img');
-                            img.src = article.urlToImage;
-                            img.alt = article.title || 'Imagem da notícia'; // Adiciona alt com fallback
-                            img.loading = 'lazy'; // Carregamento preguiçoso
-                            articleElement.appendChild(img);
-                        } else {
-                            // Se não tiver imagem, exibe uma imagem padrão
-                            const img = document.createElement('img');
-                            img.src = 'default-image.jpg';  // Imagem padrão
-                            img.alt = 'Imagem não disponível';
-                            img.loading = 'lazy';
-                            articleElement.appendChild(img);
-                        }
+                        const img = document.createElement('img');
+                        img.src = article.urlToImage;
+                        img.alt = article.title;
+                        img.loading = 'lazy'; // Carregamento preguiçoso de imagens
+                        // Fallback para imagem padrão em caso de erro
+                        img.onerror = function() {
+                            this.onerror=null;
+                            this.src='default-image.jpg';
+                            this.alt='Imagem não disponível';
+                        };
+                        articleElement.appendChild(img);
 
                         const contentDiv = document.createElement('div');
                         contentDiv.classList.add('news-content');
 
-                        // Título da notícia com link
                         const title = document.createElement('h2');
                         const link = document.createElement('a');
                         link.href = article.url;
-                        link.target = "_blank"; // Abre em uma nova aba
+                        link.target = "_blank"; // Abre em nova aba
+                        link.rel = "noopener noreferrer"; // Boa prática de segurança
                         link.textContent = article.title;
                         title.appendChild(link);
                         contentDiv.appendChild(title);
 
-                        // Descrição ou trecho do conteúdo
                         if (article.description) {
                             const description = document.createElement('p');
                             description.textContent = article.description;
                             contentDiv.appendChild(description);
                         }
 
-                        // Adiciona a fonte e data
                         const footer = document.createElement('p');
                         const date = new Date(article.publishedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
                         footer.textContent = `${article.source.name} - ${date}`;
@@ -73,17 +96,29 @@
                         newsContainer.appendChild(articleElement);
                     });
                 } else {
-                    newsContainer.innerHTML = '<p>Nenhuma notícia encontrada no momento.</p>';
+                    // Mensagem mais amigável se não encontrar resultados para a busca
+                    if(query){
+                         newsContainer.innerHTML = `<p class="error-message">Nenhum resultado encontrado para "${query}". Tente um termo diferente.</p>`;
+                    } else {
+                         newsContainer.innerHTML = '<p class="error-message">Nenhuma notícia encontrada no momento.</p>';
+                    }
                 }
 
             } catch (error) {
                 console.error('Erro ao buscar notícias:', error);
-                newsContainer.innerHTML = '<p>Ocorreu um erro ao carregar as notícias. Tente novamente mais tarde.</p>';
+                newsContainer.innerHTML = '<p class="error-message">Ocorreu um erro ao carregar as notícias. Tente novamente mais tarde.</p>';
             }
         }
 
-        // Carrega as notícias ao carregar a página
-        window.onload = fetchNews;
+        // Adiciona o listener para o evento de submit do formulário de busca
+        searchForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Impede o recarregamento da página
+            const searchTerm = searchInput.value.trim();
+            fetchNews(searchTerm);
+        });
+
+        // Carrega as notícias iniciais quando a página é carregada
+        window.onload = () => fetchNews();
     </script>
 </body>
 </html>
