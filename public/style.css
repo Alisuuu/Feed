@@ -11,7 +11,7 @@
     --purple-light: #8c70c8;
     --text-primary: #F3F4F6;
     --text-secondary: #9CA3AF;
-    --card-bg: #121212;
+    --card-bg: #1c1c1c;
     --border-color: #251A3D;
     --header-height: 4.5rem;
 }
@@ -127,60 +127,100 @@ main#contentArea {
 
 .main-results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
 }
 
-/* Cards de Notícias */
-.content-card {
-    display: block;
-    text-decoration: none;
-    background-color: var(--card-bg);
-    border-radius: 0.75rem;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 6px 12px -3px rgba(0, 0, 0, 0.4);
+/* ** INÍCIO: Estilos dos Cards Originais ** */
+.news-item {
     position: relative;
-}
-
-.content-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px -6px rgba(89, 59, 162, 0.5), 0 4px 15px rgba(0, 0, 0, 0.5);
-    border-color: var(--purple-light);
-}
-
-.content-card img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 2/3;
-    object-fit: cover;
-    display: block;
     background-color: var(--card-bg);
-}
-
-.content-card .title-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0.9) 30%, transparent 100%);
-    padding: 1.5rem 0.75rem 0.75rem;
-}
-
-.content-card .title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.4;
-    max-height: 4.2em; /* 3 linhas */
+    border-radius: 10px;
     overflow: hidden;
-    text-overflow: ellipsis;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 15px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+
+.news-item:hover {
+    transform: translateY(-5px);
+}
+
+.news-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    filter: brightness(0.4) grayscale(0.2);
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.news-item:hover img {
+    transform: scale(1.05);
+    filter: brightness(0.6);
+}
+
+.news-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 10%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+    z-index: 2;
+}
+
+.news-content {
+    position: relative;
+    z-index: 3;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.news-item h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.4em;
+    line-height: 1.3;
+}
+
+.news-item h2 a {
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+}
+
+.news-item h2 a:hover {
+    color: var(--purple-light);
+}
+
+.news-content p:nth-of-type(1) {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 12px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+.news-content p:last-child {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0;
+}
+/* ** FIM: Estilos dos Cards Originais ** */
+
 
 /* Loader e Mensagens de Erro */
 .loader {
@@ -208,25 +248,16 @@ main#contentArea {
 }
 
 /* Responsividade */
-@media (min-width: 768px) {
+@media (max-width: 768px) {
     .main-results-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-    header h1 {
-        font-size: 1.75rem;
-    }
-}
-
-@media (min-width: 1200px) {
-    .main-results-grid {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     }
 }
 
 @media (max-width: 600px) {
     header {
         padding: 0 1rem;
-        height: auto; /* Altura automática para caber o conteúdo */
+        height: auto;
     }
     header .container {
         flex-direction: column;
@@ -240,10 +271,12 @@ main#contentArea {
         padding: 1rem;
     }
     .main-results-grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 1rem;
+        grid-template-columns: 1fr;
     }
-    .content-card .title {
-        font-size: 0.85rem;
+    .news-item {
+        height: 350px;
+    }
+    .news-item h2 {
+        font-size: 1.2em;
     }
 }

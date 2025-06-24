@@ -21,7 +21,8 @@
     <!-- Cabeçalho com efeito de vidro e busca -->
     <header>
         <div class="container">
-                   <form id="search-form" class="input-search-wrapper">
+          <div class="header-controls">
+                <form id="search-form" class="input-search-wrapper">
                     <input type="text" id="search-input" class="input-search" placeholder="Buscar notícias...">
                     <button type="submit" id="searchButton" aria-label="Buscar"><i class="fas fa-search"></i></button>
                 </form>
@@ -47,7 +48,6 @@
          * @param {string} query - O termo de busca (opcional).
          */
         async function fetchNews(query = '') {
-            // Exibe o spinner de carregamento
             newsGrid.innerHTML = '<div class="loader"></div>';
 
             try {
@@ -59,50 +59,55 @@
                 const response = await fetch(apiUrl);
                 const data = await response.json();
 
-                // Limpa a grade antes de adicionar novos cards
                 newsGrid.innerHTML = '';
 
                 if (data.status === 'ok' && data.articles && data.articles.length > 0) {
                     data.articles.forEach(article => {
-                        // Pula artigos que não possuem os dados essenciais
                         if (!article.title || !article.urlToImage || !article.url) {
                             return;
                         }
 
-                        // Cria o card de notícia com a nova estrutura e classes
-                        const cardLink = document.createElement('a');
-                        cardLink.href = article.url;
-                        cardLink.target = "_blank";
-                        cardLink.rel = "noopener noreferrer";
-                        cardLink.classList.add('content-card');
-                        cardLink.setAttribute('aria-label', article.title);
+                        // **INÍCIO: Lógica para criar os cards no estilo original**
+                        const articleElement = document.createElement('article');
+                        articleElement.classList.add('news-item');
 
                         const img = document.createElement('img');
                         img.src = article.urlToImage;
-                        img.alt = `Capa da notícia: ${article.title}`;
+                        img.alt = article.title;
                         img.loading = 'lazy';
-                         // Imagem padrão em caso de erro
                         img.onerror = function() {
-                            this.onerror = null;
-                            this.src = 'https://placehold.co/400x600/121212/F3F4F6?text=Notícia';
-                            this.alt = 'Imagem da notícia indisponível';
+                            this.parentElement.style.display = 'none'; // Esconde o card se a imagem falhar
                         };
+                        articleElement.appendChild(img);
 
-                        const titleOverlay = document.createElement('div');
-                        titleOverlay.classList.add('title-overlay');
+                        const contentDiv = document.createElement('div');
+                        contentDiv.classList.add('news-content');
 
-                        const title = document.createElement('h3');
-                        title.classList.add('title');
-                        title.textContent = article.title;
+                        const title = document.createElement('h2');
+                        const link = document.createElement('a');
+                        link.href = article.url;
+                        link.target = "_blank";
+                        link.rel = "noopener noreferrer";
+                        link.textContent = article.title;
+                        title.appendChild(link);
+                        contentDiv.appendChild(title);
 
-                        titleOverlay.appendChild(title);
-                        cardLink.appendChild(img);
-                        cardLink.appendChild(titleOverlay);
+                        if (article.description) {
+                            const description = document.createElement('p');
+                            description.textContent = article.description;
+                            contentDiv.appendChild(description);
+                        }
 
-                        newsGrid.appendChild(cardLink);
+                        const footer = document.createElement('p');
+                        const date = new Date(article.publishedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                        footer.textContent = `${article.source.name} - ${date}`;
+                        contentDiv.appendChild(footer);
+                        
+                        articleElement.appendChild(contentDiv);
+                        newsGrid.appendChild(articleElement);
+                        // **FIM: Lógica para criar os cards no estilo original**
                     });
                 } else {
-                    // Mensagem de erro ou nenhum resultado
                     let message = query 
                         ? `Nenhum resultado para "${query}".`
                         : "Nenhuma notícia encontrada no momento.";
@@ -115,14 +120,12 @@
             }
         }
 
-        // Listener para o formulário de busca
         searchForm.addEventListener('submit', (event) => {
             event.preventDefault();
             const searchTerm = searchInput.value.trim();
             fetchNews(searchTerm);
         });
 
-        // Carregamento inicial das notícias
         window.onload = () => fetchNews();
     </script>
 </body>
