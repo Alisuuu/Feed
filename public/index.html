@@ -15,6 +15,30 @@
     
     <!-- CSS Personalizado -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Folhas de Estilo - Carregamento Dinâmico -->
+    <script>
+      const loadThemeCss = () => {
+          const selectedTheme = localStorage.getItem('selectedTheme') || 'default'; // 'default' as fallback
+          const cssFiles = [
+              `themes/${selectedTheme}/feed.css` // Adjusted path to new location
+          ];
+
+          // Remove existing theme stylesheets to prevent duplicates on theme change
+          document.querySelectorAll('link[data-theme-css]').forEach(link => link.remove());
+
+          cssFiles.forEach(file => {
+              const link = document.createElement('link');
+              link.rel = 'stylesheet';
+              link.href = file; // Path is now relative to feed-main/public/index.html
+              link.setAttribute('data-theme-css', ''); // Mark as theme CSS
+              document.head.appendChild(link);
+          });
+      };
+
+      // Load theme immediately
+      loadThemeCss();
+    </script>
 </head>
 <body>
 
@@ -59,9 +83,8 @@
                 const response = await fetch(apiUrl);
                 const data = await response.json();
 
-                newsGrid.innerHTML = '';
-
                 if (data.status === 'ok' && data.articles && data.articles.length > 0) {
+                    newsGrid.innerHTML = ''; // Limpa a mensagem de carregamento
                     data.articles.forEach(article => {
                         if (!article.title || !article.urlToImage || !article.url) {
                             return;
@@ -92,6 +115,7 @@
                         title.appendChild(link);
                         contentDiv.appendChild(title);
 
+                        // Descrição ou trecho do conteúdo
                         if (article.description) {
                             const description = document.createElement('p');
                             description.textContent = article.description;
