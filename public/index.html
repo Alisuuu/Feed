@@ -14,12 +14,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <!-- CSS Personalizado -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="themes/dracula/feed.css">
 
     <!-- Folhas de Estilo - Carregamento Dinâmico -->
     <script>
       const loadThemeCss = () => {
-          const selectedTheme = localStorage.getItem('selectedTheme') || 'default'; // 'default' as fallback
+          const selectedTheme = localStorage.getItem('selectedTheme') || 'dracula'; // 'dracula' as fallback
           const cssFiles = [
               `themes/${selectedTheme}/feed.css` // Adjusted path to new location
           ];
